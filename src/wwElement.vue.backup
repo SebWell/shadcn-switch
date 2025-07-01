@@ -1,14 +1,14 @@
 <template>
   <div :class="wrapperClasses">
-    <label v-if="label" :class="labelClasses">
-      {{ label }}
-      <span v-if="required" class="text-destructive ml-1">*</span>
+    <label v-if="content.label" :class="labelClasses">
+      {{ content.label }}
+      <span v-if="content.required" class="text-destructive ml-1">*</span>
     </label>
     
     <div 
       :class="switchClasses"
       :aria-checked="isChecked"
-      :tabindex="disabled ? -1 : 0"
+      :tabindex="content.disabled ? -1 : 0"
       role="switch"
       @click="handleToggle"
       @keydown.space.prevent="handleToggle"
@@ -17,8 +17,8 @@
       <div :class="thumbClasses" />
     </div>
     
-    <span v-if="description" :class="descriptionClasses">
-      {{ description }}
+    <span v-if="content.description" :class="descriptionClasses">
+      {{ content.description }}
     </span>
   </div>
 </template>
@@ -51,7 +51,7 @@ export default {
   emits: ['update:modelValue', 'change'],
   setup(props, { emit }) {
     const isChecked = computed(() => {
-      return props.modelValue !== undefined ? props.modelValue : props.checked
+      return props.modelValue !== undefined ? props.modelValue : props.content.checked
     })
 
     const sizeClasses = {
@@ -68,7 +68,7 @@ export default {
 
     const wrapperClasses = computed(() => cn(
       "flex flex-col space-y-2",
-      props.customClasses
+      props.content.customClasses
     ))
 
     const labelClasses = computed(() => cn(
@@ -77,22 +77,22 @@ export default {
 
     const switchClasses = computed(() => cn(
       "peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
-      sizeClasses[props.size] || sizeClasses.default,
+      sizeClasses[props.content.size] || sizeClasses.default,
       {
         "bg-primary": isChecked.value,
         "bg-input": !isChecked.value,
-        "cursor-not-allowed opacity-50": props.disabled
+        "cursor-not-allowed opacity-50": props.content.disabled
       }
     ))
 
     const thumbClasses = computed(() => {
       const baseClasses = "pointer-events-none block rounded-full bg-background shadow-lg ring-0 transition-transform"
-      const sizeClass = thumbSizeClasses[props.size] || thumbSizeClasses.default
+      const sizeClass = thumbSizeClasses[props.content.size] || thumbSizeClasses.default
       
       let translateClass = ''
       if (isChecked.value) {
-        if (props.size === 'sm') translateClass = 'translate-x-3'
-        else if (props.size === 'lg') translateClass = 'translate-x-6'
+        if (props.content.size === 'sm') translateClass = 'translate-x-3'
+        else if (props.content.size === 'lg') translateClass = 'translate-x-6'
         else translateClass = 'translate-x-5'
       } else {
         translateClass = 'translate-x-0'
@@ -106,20 +106,20 @@ export default {
     ))
 
     const handleToggle = () => {
-      if (props.disabled) return
+      if (props.content.disabled) return
 
       const newValue = !isChecked.value
       emit('update:modelValue', newValue)
       emit('change', newValue)
 
       // Update Weweb variable if defined
-      if (props.wewebVariable && typeof wwLib !== 'undefined') {
-        wwLib.wwVariable.updateValue(props.wewebVariable, newValue)
+      if (props.content.wewebVariable && typeof wwLib !== 'undefined') {
+        wwLib.wwVariable.updateValue(props.content.wewebVariable, newValue)
       }
 
       // Execute Weweb workflow if defined
-      if (props.changeWorkflowId && typeof wwLib !== 'undefined') {
-        wwLib.executeWorkflow(props.changeWorkflowId)
+      if (props.content.changeWorkflowId && typeof wwLib !== 'undefined') {
+        wwLib.executeWorkflow(props.content.changeWorkflowId)
       }
     }
 
