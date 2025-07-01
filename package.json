@@ -1,26 +1,26 @@
 {
   "name": "shadcn-switch",
   "version": "1.0.0",
-  "description": "Shadcn/UI Switch component for Weweb",
-  "main": "src/Switch.vue",
+  "description": "Shadcn/UI switch component for Weweb",
+  "main": "src/switch.vue",
+  "weweb": {
+    "componentPath": "./src/switch.vue"
+  },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "serve": "webpack serve --mode development",
+    "build": "webpack --mode production"
   },
   "keywords": [
     "weweb",
     "shadcn",
     "ui",
-    "Switch",
+    "switch",
     "vue",
     "component"
   ],
-  "author": "Shadcn/UI for Weweb Community",
+  "author": "Shadcn/UI for Weweb",
   "license": "MIT",
   "dependencies": {
     "vue": "^3.3.4"
-  },
-  "devDependencies": {
-    "@vue/cli-service": "^5.0.8"
   }
 }
